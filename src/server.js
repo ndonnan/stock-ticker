@@ -20,10 +20,10 @@ exports.init = async () => {
 
 exports.start = async () => {
   await server.start()
-  console.log(`Server running at: ${server.info.uri}`)
   return server
 }
 
+/* istanbul ignore next */
 process.on('unhandledRejection', (err) => {
   console.log(err)
   process.exit(1)
