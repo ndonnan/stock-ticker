@@ -1,0 +1,26 @@
+{
+  "name": "stock-ticker",
+  "version": "0.0.1",
+  "description": "Stock Ticker API",
+  "scripts": {
+    "start": "node src/run-server.js",
+    "pretest": "standard",
+    "test": "mocha"
+  },
+  "keywords": [
+    "stock",
+    "ticker",
+    "REST",
+    "API"
+  ],
+  "author": "Neal Donnan",
+  "license": "ISC",
+  "dependencies": {
+    "hapi": "^18.1.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.1.2",
+    "standard": "^12.0.1"
+  }
+}
