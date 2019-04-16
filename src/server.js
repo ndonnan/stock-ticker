@@ -9,12 +9,22 @@ const server = hapi.server({
   host: '0.0.0.0'
 })
 
+// Set up cached methods
+server.method('quote', getQuote, {
+  cache: {
+    expiresIn: 30 * 1000,
+    generateTimeout: 5000
+  }
+})
+
+// Set up routes
 server.route({
   method: 'GET',
   path: '/quote',
   handler: async function (request, h) {
     try {
-      return await getQuote(request.query.symbol)
+      const { symbol } = request.query
+      return await server.methods.quote(symbol)
     } catch (err) {
       if (err instanceof UnknownSymbolError) {
         return boom.notFound(err.message)
