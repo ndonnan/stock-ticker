@@ -1,4 +1,5 @@
 const hapi = require('hapi')
+const { getQuote, UnknownSymbolError } = require('./handlers')
 
 const server = hapi.server({
   port: 3000,
@@ -7,9 +8,17 @@ const server = hapi.server({
 
 server.route({
   method: 'GET',
-  path: '/',
-  handler: function () {
-    return 'Hello World!'
+  path: '/quote',
+  handler: async function (request, h) {
+    try {
+      return await getQuote(request.query.symbol)
+    } catch (err) {
+      if (err instanceof UnknownSymbolError) {
+        return h.response(err.message).code(404)
+      } else {
+        return h.response(err.message).code(500)
+      }
+    }
   }
 })
 
