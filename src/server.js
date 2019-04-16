@@ -1,5 +1,6 @@
 const hapi = require('hapi')
 const boom = require('boom')
+const joi = require('joi')
 const { getQuote } = require('./providers/iex-provider')
 const { UnknownSymbolError } = require('./providers/errors')
 
@@ -19,6 +20,13 @@ server.route({
         return boom.notFound(err.message)
       } else {
         return boom.internal(err.message)
+      }
+    }
+  },
+  options: {
+    validate: {
+      query: {
+        symbol: joi.string().alphanum().required()
       }
     }
   }

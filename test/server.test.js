@@ -85,7 +85,7 @@ describe('Server', function () {
     expect(res.result.message).to.equal('Unknown symbol: UNKNOWN')
   })
 
-  it('return an error if there is a general server error', async function () {
+  it('returns an error if there is a general server error', async function () {
     stub.returns(Promise.reject(new errors.StatusCodeError(500)))
 
     const res = await server.inject({
@@ -95,5 +95,15 @@ describe('Server', function () {
 
     expect(res.statusCode).to.equal(500)
     expect(res.result.message).to.equal('An internal server error occurred')
+  })
+
+  it('checks the quote input parameters', async function () {
+    const res = await server.inject({
+      method: 'GET',
+      url: '/quote?blah=foo'
+    })
+
+    expect(res.statusCode).to.equal(400)
+    expect(res.result.error).to.equal('Bad Request')
   })
 })
