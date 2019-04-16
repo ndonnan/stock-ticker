@@ -2,11 +2,17 @@
   "name": "stock-ticker",
   "version": "0.0.1",
   "description": "Stock Ticker API",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NealDonnan/stock-ticker.git"
+  },
   "scripts": {
-    "start": "node src/run-server.js",
+    "start": "node src/index.js",
     "pretest": "standard",
     "test": "nyc --check-coverage --lines 100 --functions 100 --branches 100 --reporter=text --reporter=html mocha",
-    "docker:build": "docker build -t nealdon/stock-ticker ."
+    "docker:build": "docker build -t nealdon/stock-ticker .",
+    "docker:run": "docker run --name stock-ticker -p 3001:3000 -d nealdon/stock-ticker",
+    "docker:stop": "docker stop stock-ticker && docker rm stock-ticker"
   },
   "keywords": [
     "stock",
@@ -15,8 +21,9 @@
     "API"
   ],
   "author": "Neal Donnan",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
+    "boom": "^7.3.0",
     "hapi": "^18.1.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7"

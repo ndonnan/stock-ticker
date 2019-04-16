@@ -1,5 +1,7 @@
 const hapi = require('hapi')
-const { getQuote, UnknownSymbolError } = require('./handlers')
+const boom = require('boom')
+const { getQuote } = require('./providers/iex-provider')
+const { UnknownSymbolError } = require('./providers/errors')
 
 const server = hapi.server({
   port: 3000,
@@ -14,9 +16,9 @@ server.route({
       return await getQuote(request.query.symbol)
     } catch (err) {
       if (err instanceof UnknownSymbolError) {
-        return h.response(err.message).code(404)
+        return boom.notFound(err.message)
       } else {
-        return h.response(err.message).code(500)
+        return boom.internal(err.message)
       }
     }
   }
