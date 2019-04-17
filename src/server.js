@@ -1,10 +1,14 @@
-const hapi = require('hapi')
-const boom = require('boom')
-const joi = require('joi')
+const Hapi = require('hapi')
+const Boom = require('boom')
+const Joi = require('joi')
+const Inert = require('inert')
+const Vision = require('vision')
+const HapiSwagger = require('hapi-swagger')
+const Package = require('../package')
 const { getQuote } = require('./providers/iex-provider')
 const { UnknownSymbolError } = require('./providers/errors')
 
-const server = hapi.server({
+const server = Hapi.server({
   port: 3000,
   host: '0.0.0.0'
 })
@@ -27,27 +31,48 @@ server.route({
       return await server.methods.quote(symbol)
     } catch (err) {
       if (err instanceof UnknownSymbolError) {
-        return boom.notFound(err.message)
+        return Boom.notFound(err.message)
       } else {
-        return boom.internal(err.message)
+        return Boom.internal(err.message)
       }
     }
   },
   options: {
+    tags: ['api'],
+    description: 'Get a stock quote',
     validate: {
       query: {
-        symbol: joi.string().alphanum().required()
+        symbol: Joi.string().alphanum().required()
       }
     }
   }
 })
 
+const registerPlugins = async (server) => {
+  await server.register([
+    Inert,
+    Vision,
+    {
+      plugin: HapiSwagger,
+      options: {
+        info: {
+          title: 'Stock Ticker API Documentation',
+          version: Package.version
+        }
+      }
+    }
+  ])
+}
+
 exports.init = async () => {
-  await server.initialize()
+  try {
+    await server.initialize()
+  } catch (err) { }
   return server
 }
 
 exports.start = async () => {
+  await registerPlugins(server)
   await server.start()
   return server
 }
