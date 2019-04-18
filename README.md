@@ -1,4 +1,6 @@
+
 # Stock Ticker
+[![CircleCI](https://circleci.com/gh/NealDonnan/stock-ticker.svg?style=svg)](https://circleci.com/gh/NealDonnan/stock-ticker)
 
 This is a Node.js REST application to retrieve stock quotes.
 
